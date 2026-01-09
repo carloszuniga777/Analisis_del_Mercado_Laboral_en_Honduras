@@ -1,9 +1,10 @@
-#install.packages("readxl")    # Para leer archivos excel
-#install.packages("tidyverse)  # Para manipular los datos y graficar 
-
+#install.packages("readxl")     # Para leer archivos excel
+#install.packages("tidyverse")  # Para manipular los datos y graficar 
+#install.packages("ggrepel")    # Para etiquetas que no se traslapan 
 
 library(readxl)           # Para leer archivos excel
 library(tidyverse)        # Para manipular los datos y graficar
+library(ggrepel)          # Para etiquetas que no se traslapan 
 
 #--------------------------------------
 # 1. Carga inicial 
@@ -104,6 +105,7 @@ graficar_boxplot_unificado <- function(data, titulo) {
     theme_minimal() +
     theme(axis.text.x = element_text(angle = 45, hjust = 1), legend.position = "none")
 }
+
 
 
 
@@ -447,22 +449,72 @@ colores_honduras <- c(
 # Grafico de lineas de la dinamica laboral en Honduras
 
 ggplot(empleo_honduras, aes(x=Año, y=Valor, colour = Categoria)) +
-  
+
   # 1. GEOMETRÍAS: Líneas de tendencia y puntos de medición
   geom_line(size = 1.2, alpha = 0.8) +                      # Dibuja las líneas de tendencia
   geom_point(size = 2) +                                    # Marca los puntos exactos de medición
-  
-  
+
+
+
   
   # 2. ETIQUETAS DE DATOS:  Etiquetas de datos inteligentes (Solo para el último año y picos para no saturar)
-  geom_text(data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025)),
-            aes(label = paste0(round(Valor, 1), "%")),
-            vjust = -1, size = 3, fontface = "bold", show.legend = FALSE) +
   
+  # --- Etiquetas para Población Ocupada (AZUL) -> SIEMPRE ABAJO ---
+  geom_text_repel(
+    data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_actividad"),
+    aes(label = paste0(round(Valor, 1), "%")),
+    nudge_y = 5,           # Empuja hacia arriba
+    direction = "y",
+    fontface = "bold", size = 3.5, segment.color = NA, show.legend = FALSE
+  ) +
+
+  # --- Etiquetas para Población Ocupada (AZUL) -> SIEMPRE ABAJO ---
+  geom_text_repel(
+    data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_ocupacion"),
+    aes(label = paste0(round(Valor, 1), "%")),
+    nudge_y = -5,          # Empuja hacia abajo
+    direction = "y",
+    fontface = "bold", size = 3.5, segment.color = NA, show.legend = FALSE
+  ) +
+
+  # --- Etiquetas para Tasa de Desempleo (ROJO) -> ARRIBA (para alejarse del eje 0) ---
+  geom_text_repel(
+    data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_desempleo"),
+    aes(label = paste0(round(Valor, 1), "%")),
+    nudge_y = 3,
+    direction = "y",
+    fontface = "bold", size = 3.5, segment.color = NA, show.legend = FALSE
+  ) +
+
+
+  # Etiquetas para Tasa de Actividad (ARRIBA)
+  # geom_text(
+  #   data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_actividad"),
+  #   aes(label = paste0(round(Valor, 1), "%")),
+  #   vjust = -1.5,          # Valor negativo empuja el texto hacia ARRIBA del punto
+  #   fontface = "bold", size = 3.5, show.legend = FALSE
+  # ) +
+  #
+  # # Etiquetas para Población Ocupada (ABAJO)
+  # geom_text(
+  #   data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_ocupacion"),
+  #   aes(label = paste0(round(Valor, 1), "%")),
+  #   vjust = 2.5,           # Valor positivo empuja el texto hacia ABAJO del punto
+  #   fontface = "bold", size = 3.5, show.legend = FALSE
+  # ) +
+  #
+  # # Etiquetas para Tasa de Desempleo (ARRIBA)
+  # geom_text(
+  #   data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_desempleo"),
+  #   aes(label = paste0(round(Valor, 1), "%")),
+  #   vjust = -1.2,
+  #   fontface = "bold", size = 3.5, show.legend = FALSE
+  # ) +
+
   
   
   # 3. TEXTOS Y TÍTULOS
-  
+
   labs(
     title = "Dinámica laboral en Honduras",
     subtitle = "Evolución de la Participación, Ocupación y Desempleo (2012 - 2025)",
@@ -471,11 +523,11 @@ ggplot(empleo_honduras, aes(x=Año, y=Valor, colour = Categoria)) +
     x = "Año de la Encuesta",
     color = "Indicador Laboral" # Título de la leyenda
   ) +
-  
-  
-  
+
+
+
   # 4. Escalas y etiquetas
-  
+
   scale_color_manual(                                                                 # Se personalizan los colores de cada linea y los nombres de la leyenda
     values = colores_honduras,
     labels = c(
@@ -484,18 +536,18 @@ ggplot(empleo_honduras, aes(x=Año, y=Valor, colour = Categoria)) +
       "tasa_desempleo" = "Tasa de Desempleo"
     )
   ) +
-  
+
   scale_x_continuous(breaks = unique(empleo_honduras$Año)) +                   # Todos los años en el eje X
-  
+
   scale_y_continuous(labels = function(x) paste0(x, "%"),                     # Añade el símbolo %
                      limits = c(0, 100),                                      # Limites de rango del eje Y
                      breaks = seq(0, 100, by = 10)                            # Guías cada 10% para mejorar lectura
-  ) +  
-  
-  
-  
-  
-  
+  ) +
+
+
+
+
+
   # 5. Tema profesional de BI
   theme_minimal(base_size = 14) +
   theme(
@@ -503,19 +555,19 @@ ggplot(empleo_honduras, aes(x=Año, y=Valor, colour = Categoria)) +
     plot.title = element_text(face = "bold", size = 16, hjust = 0.5, color = "darkblue"),
     plot.subtitle = element_text(size = 14, hjust = 0.5, margin = margin(b = 15)),
     plot.caption = element_text(size = 9, color = "#555555", face = "italic", hjust = 1),
-    
+
     # --- ETIQUETAS DE LOS EJES (X e Y) ---
     axis.title.x = element_text(face = "bold", size = 14, color = "darkgrey"),
     axis.title.y = element_text(face = "bold", size = 14, color = "darkgrey"),
     axis.text.x = element_text(angle = 45, hjust = 1, size = 10, color = "black"),   # Inclinamos los años para que no choquen
     axis.text.y = element_text(size = 10, color = "black"),
-    
+
     # --- CONFIGURACIÓN DE LA LEYENDA ---
     legend.position = "top",                                                         # Coloca la leyenda arriba
-    legend.title = element_text(face = "bold", size = 9),
-    legend.text = element_text(size = 9),
+    legend.title = element_text(face = "bold", size =11),
+    legend.text = element_text(size = 11),
     legend.background = element_rect(fill = "white", color = "lightgrey"),
-    
+
     # Limpieza visual
     panel.grid.minor = element_blank()
   )
@@ -541,7 +593,7 @@ empleo_edad_pivot <- empleo_edad_resumen %>%
     cols = c(tasa_actividad, tasa_desempleo), 
     names_to = "Indicador", 
     values_to = "Valor"
-  )
+  ) 
 
 
 # DEFINICIÓN DE COLORES 
@@ -579,7 +631,7 @@ ggplot(empleo_edad_pivot, aes(x = Año, y = Valor, color = Indicador)) +
     x = "Año de la Encuesta",
     y = "Tasa Porcentual (%)",
     color = "Indicador",
-    caption = "Fuente: INE Honduras | La brecha entre líneas representa la población ocupada dentro de la PEA."
+    caption = "Fuente: INE Honduras"
   ) +
   
   
@@ -589,7 +641,7 @@ ggplot(empleo_edad_pivot, aes(x = Año, y = Valor, color = Indicador)) +
   # Color de las lineas y renombrar las etiquetas de la leyenda
   scale_color_manual(
     values = colores_kpi,
-    labels = c("tasa_actividad" = "Tasa de Actividad (PEA)", "tasa_desempleo" = "Tasa de Desempleo")
+    labels = c("tasa_actividad" = "Tasa de Actividad", "tasa_desempleo" = "Tasa de Desempleo")
   ) +
   
   # Escala del eje y 
@@ -616,17 +668,28 @@ ggplot(empleo_edad_pivot, aes(x = Año, y = Valor, color = Indicador)) +
     
     # --- CENTRAR Y DAR TAMAÑO A TÍTULOS ---
     plot.title = element_text(face = "bold", size = 16, color = "#1A237E"),
+    plot.subtitle = element_text(size = 12, hjust = 0.5, margin = margin(b = 15)),
+    plot.caption = element_text(size = 9, color = "#555555", face = "italic", hjust = 1),
     
+
+    # --- ETIQUETAS DE LOS EJES (X e Y) ---
+    axis.title.x = element_text(face = "bold", size = 14, color = "darkgrey"),
+    axis.title.y = element_text(face = "bold", size = 14, color = "darkgrey"),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10, color = "black"),   # Inclinamos los años para que no choquen
+    axis.text.y = element_text(size = 10, color = "black"),
     
+        
     # --- CONFIGURACIÓN DE LA LEYENDA ---
     legend.position = "top",
+    
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 11),
+    legend.background = element_rect(fill = "white", color = "lightgrey"),
+    
     
     # ---- Limpieza visual -----------
     panel.grid.minor = element_blank()
   )
-
-
-
 
 
 
@@ -728,7 +791,7 @@ ggplot(empleo_genero_pivot, aes(x = Año, y = Valor, color = Indicador, group = 
 
     # --- CENTRAR Y DAR TAMAÑO A TÍTULOS ---
     plot.title = element_text(face = "bold", size = 16, hjust = 0.5, color = "darkblue"),
-    plot.subtitle = element_text(size = 14, hjust = 0.5, margin = margin(b = 15)),
+    plot.subtitle = element_text(size = 12, hjust = 0.5, margin = margin(b = 15)),
     plot.caption = element_text(size = 9, color = "#555555", face = "italic", hjust = 1),
 
     # --- ETIQUETAS DE LOS EJES (X e Y) ---
@@ -739,8 +802,8 @@ ggplot(empleo_genero_pivot, aes(x = Año, y = Valor, color = Indicador, group = 
 
     # --- CONFIGURACIÓN DE LA LEYENDA ---
     legend.position = "top",                                                         # Coloca la leyenda arriba
-    legend.title = element_text(face = "bold", size = 9),
-    legend.text = element_text(size = 9),
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 11),
     legend.background = element_rect(fill = "white", color = "lightgrey"),
 
     # Limpieza visual
