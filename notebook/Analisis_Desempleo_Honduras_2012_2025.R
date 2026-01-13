@@ -519,7 +519,7 @@ ggplot(empleo_honduras, aes(x=Año, y=Valor, colour = Categoria)) +
   
   # --- Etiquetas para Tasa de Actividad (ARRIBA)
   geom_text_repel(
-    data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_actividad"),
+    data = empleo_honduras %>% filter(Año %in% c(2012, 2017, 2020, 2025), Categoria == "tasa_actividad"),
     aes(label = paste0(round(Valor, 1), "%")),
     nudge_y = 5,           # Empuja hacia arriba
     direction = "y",
@@ -528,7 +528,7 @@ ggplot(empleo_honduras, aes(x=Año, y=Valor, colour = Categoria)) +
 
   # --- Etiquetas para Población Ocupada (ABAJO)
   geom_text_repel(
-    data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_ocupacion"),
+    data = empleo_honduras %>% filter(Año %in% c(2012, 2017, 2020, 2025), Categoria == "tasa_ocupacion"),
     aes(label = paste0(round(Valor, 1), "%")),
     nudge_y = -5,          # Empuja hacia abajo
     direction = "y",
@@ -537,7 +537,7 @@ ggplot(empleo_honduras, aes(x=Año, y=Valor, colour = Categoria)) +
 
   # --- Etiquetas para Tasa de Desempleo (ARRIBA)
   geom_text_repel(
-    data = empleo_honduras %>% filter(Año %in% c(2012, 2020, 2025), Categoria == "tasa_desempleo"),
+    data = empleo_honduras %>% filter(Año %in% c(2012, 2017, 2020, 2025), Categoria == "tasa_desempleo"),
     aes(label = paste0(round(Valor, 1), "%")),
     nudge_y = 3,
     direction = "y",
@@ -676,10 +676,23 @@ ggplot(empleo_edad_pivot, aes(x = Año, y = Valor, color = Indicador)) +
   
   
   # 3. ETIQUETAS DE DATOS:  Etiquetas de datos inteligentes (Solo para el último año y picos para no saturar)
-  geom_text(data = empleo_edad_pivot %>% filter(Año %in% c(2012, 2020, 2025)),
-            aes(label = paste0(round(Valor, 1), "%")),
-            vjust = -1, size = 3, fontface = "bold", show.legend = FALSE) +
-  
+  #--- Etiquetas para Tasa de Actividad (ARRIBA)
+  geom_text_repel(
+    data = empleo_edad_pivot %>% filter(Año %in% c(2012, 2017, 2020, 2025), Indicador == "tasa_actividad"),
+    aes(label = paste0(round(Valor, 1), "%")),
+    nudge_y = 6,           # Empuja hacia arriba
+    direction = "y",
+    fontface = "bold", size = 3.5, segment.color = NA, show.legend = FALSE
+  ) +
+
+  #--- Etiquetas para Población Ocupada (ABAJO)
+  geom_text_repel(
+    data = empleo_edad_pivot %>% filter(Año %in% c(2012, 2017, 2020, 2025), Indicador == "tasa_desempleo"),
+    aes(label = paste0(round(Valor, 1), "%")),
+    nudge_y = 0,          # Empuja hacia abajo
+    direction = "y",
+    fontface = "bold", size = 3.5, segment.color = NA, show.legend = FALSE,
+  ) +
   
   
   # 4. TÍTULOS Y TEXTOS
@@ -703,8 +716,9 @@ ggplot(empleo_edad_pivot, aes(x = Año, y = Valor, color = Indicador)) +
   ) +
   
   # Escala del eje y 
-  scale_y_continuous(limits = c(0, 100),                                        # Establece los limites de 0 a 100 
-                     labels = function(x) paste0(x, "%")                        # Coloca signo % a cada dato del eje Y  
+  scale_y_continuous(limits = c(0, 100),                                         # Establece los limites de 0 a 100 
+                     oob = scales::squish,                                       # Evita eliminar valores fuera del rango; los aplasta al límite más cercano
+                     labels = function(x) paste0(x, "%")                         # Coloca signo % a cada dato del eje Y  
                      ) +            
   
   # Escala del eje x
@@ -723,7 +737,7 @@ ggplot(empleo_edad_pivot, aes(x = Año, y = Valor, color = Indicador)) +
     
     #-------- Espacio entre paneles ------------
     panel.spacing = unit(1.5, "lines"), 
-    
+  
     # --- CENTRAR Y DAR TAMAÑO A TÍTULOS ---
     plot.title = element_text(face = "bold", size = 16, color = "#1A237E"),
     plot.subtitle = element_text(size = 12, hjust = 0.5, margin = margin(b = 15)),
