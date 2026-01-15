@@ -243,8 +243,32 @@ empleo_edad <- empleo_edad %>%
   mutate(across(where(is.character), str_squish))   # str_squish: Quita los espacios de los extremos y convierte cualquier doble espacio interno en uno solo
 
 
+# 3.2 Redondendo valores
 
-#3.2. Estandarizacion de los grupos de edad 
+empleo_edad <- empleo_edad %>%
+  mutate(
+    Ocupados = round(Ocupados),
+    Desocupados = round(Desocupados),
+    Inactivos = round(Inactivos),
+    `Población Económicamente Activa (PEA)` = round(`Población Económicamente Activa (PEA)`),
+    `Población en Edad de Trabajar (PET)` = round(`Población en Edad de Trabajar (PET)`)
+  )
+
+
+empleo_genero <- empleo_genero %>%
+  mutate(
+    Ocupados    = round(Ocupados),
+    Desocupados = round(Desocupados),
+    Inactivos   = round(Inactivos),
+    `Población Económicamente Activa (PEA)` = round(`Población Económicamente Activa (PEA)`),
+    `Población en Edad de Trabajar (PET)` = round(`Población en Edad de Trabajar (PET)`)
+  )
+
+
+
+
+
+#3.3. Estandarizacion de los grupos de edad 
 
 empleo_edad <- empleo_edad %>% 
   mutate(`Grupos_edad` = case_when (
@@ -278,7 +302,7 @@ empleo_edad <- empleo_edad %>%
 
 
 
-# 3.3. Dataset Resumen Edad: 
+# 3.4. Dataset Resumen Edad: 
 # Se crea un nuevo Dataset para calcular los valores de Ocupado, Desocupado, Inactivo, Inactivo, PEA, PET
 # de cada supergrupo Grupos_edad y calculamos las tasas
 
@@ -304,7 +328,7 @@ summarise(
 
 
 
-# 3.4. Calcular tasas del dataset empleo_genero: Tasa de empleo, actividad y ocupación 
+# 3.5. Calcular tasas del dataset empleo_genero: Tasa de empleo, actividad y ocupación 
 
 empleo_genero<- empleo_genero %>% 
   mutate( tasa_desempleo = round((Desocupados / `Población Económicamente Activa (PEA)`) * 100, 2), 
@@ -887,11 +911,90 @@ ggplot(empleo_genero_pivot, aes(x = Año, y = Valor, color = Indicador, group = 
 
 
 
+# Calculando la Brecha de genero
+# Brecha de genero = Tasa de actividad hombre - Tasa de actividad mujer 
+
+brecha_genero_pivot <- empleo_genero_pivot %>%
+  filter(Indicador == "tasa_actividad") %>%
+  select(Año, Genero, Valor) %>%
+  pivot_wider(names_from = Genero, values_from = Valor) %>%     
+  mutate(brecha_genero = Hombre - Mujer)
+
+
+
+
+# Grafico de barras
+
+ggplot(brecha_genero_pivot, aes(x = factor(Año), y = brecha_genero)) +
+  geom_col(width = 0.6, fill = "#6F67F1", color = "#6F67F1") +
+
+  # 1. TEXTOS Y TÍTULOS
+  labs(
+    title = "Brecha de Género",
+    x = "Año",
+    y = "Brecha de Género (%)",
+    caption = "Fuente: INE Honduras"
+  ) +
+  
+  
+  # 2. ETIQUETAS SOBRE CADA BARRA 
+  geom_text(aes(label = paste0(round(brecha_genero, 1), "%")), 
+            vjust = -0.5, 
+            size = 3, 
+            color = "#6F67F1", 
+            fontface = "bold") +
+  
+  
+  # 3. CONFIGURACIÓN DE ESCALAS
+  
+  # Escala del eje y 
+  scale_y_continuous(limits = c(0, 100),                                         # Establece los limites de 0 a 100 
+                     labels = function(x) paste0(x, "%")                         # Coloca signo % a cada dato del eje Y  
+  ) +            
+  
+  
+  # 3. TEMA PROFESIONAL DE ALTA LECTURA
+  theme_minimal(base_size = 14) +
+  theme(
+    
+    # --- CENTRAR Y DAR TAMAÑO A TÍTULOS ---
+    plot.title = element_text(face = "bold", hjust = 0.5, size = 16, color = "#1A237E"),
+    plot.caption = element_text(size = 9, color = "#555555", face = "italic", hjust = 1),
+    
+    
+    # --- ETIQUETAS DE LOS EJES (X e Y) ---
+    axis.title.x = element_text(face = "bold", size = 14, color = "darkgrey"),
+    axis.title.y = element_text(face = "bold", size = 14, color = "darkgrey"),
+    axis.text.x = element_text(angle = 45, hjust = 1, size = 10, color = "black"),   # Inclinamos los años para que no choquen
+    axis.text.y = element_text(size = 10, color = "black"),
+    
+  )
 
 
 
 
 
+
+  
+  
+
+  
+  
+  
+ 
+    
+   
+    
+    # --- CONFIGURACIÓN DE LA LEYENDA ---
+    legend.position = "top",
+    
+    legend.title = element_text(face = "bold", size = 11),
+    legend.text = element_text(size = 11),
+    legend.background = element_rect(fill = "white", color = "lightgrey"),
+    
+    
+    # ---- Limpieza visual -----------
+    panel.grid.minor = element_blank()
 
 
 
