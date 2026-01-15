@@ -970,32 +970,3 @@ ggplot(brecha_genero_pivot, aes(x = factor(Año), y = brecha_genero)) +
     
   )
 
-
-
-
-
-
-  
-  
-
-  
-  
-  
- 
-    
-   
-    
-    # --- CONFIGURACIÓN DE LA LEYENDA ---
-    legend.position = "top",
-    
-    legend.title = element_text(face = "bold", size = 11),
-    legend.text = element_text(size = 11),
-    legend.background = element_rect(fill = "white", color = "lightgrey"),
-    
-    
-    # ---- Limpieza visual -----------
-    panel.grid.minor = element_blank()
-
-
-
-
