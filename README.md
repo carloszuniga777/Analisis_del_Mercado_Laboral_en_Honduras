@@ -165,12 +165,12 @@ El entregable final de esta fase comprende un conjunto de insights de alto nivel
 ## 📂 Uso del repositorio
 
 Repositorio:\
-<https://github.com/carloszuniga777/Analisis_del_Desempleo_en_Honduras/tree/main>
+<https://github.com/carloszuniga777/Analisis_del_Mercado_Laboral_en_Honduras/tree/main>
 
 1.  Clonar el repostorio:
 
     ``` bash
-    git clone https://github.com/carloszuniga777/Analisis_del_Desempleo_en_Honduras.git
+    git clone https://github.com/carloszuniga777/Analisis_del_Mercado_Laboral_en_Honduras.git
     ```
 
 2.  **Abrir los scripts en RStudio.**
