@@ -1,4 +1,4 @@
-# Estudio del Mercado Laboral en Honduras
+# Estudio del Mercado Laboral en Honduras (2012 - 2025)
 
 ![R](https://img.shields.io/badge/R-276DC3?style=for-the-badge&logo=r&logoColor=white) ![RStudio](https://img.shields.io/badge/RStudio-75AADB?style=for-the-badge&logo=rstudio&logoColor=white) ![Power BI](https://img.shields.io/badge/Power_BI-F2C811?style=for-the-badge&logo=powerbi&logoColor=black) ![Versión](https://img.shields.io/badge/Versión-1.0.0-brightgreen?style=for-the-badge) ![Licencia](https://img.shields.io/badge/Licencia-MIT-blue?style=for-the-badge)
 
@@ -109,7 +109,7 @@ Para entender el mercado laboral en Honduras, es fundamental diferencias entre d
 ### 7.3. Métricas Claves:
 
 | Métrica | Fórmula | Interpretación |
-|----|----|----|
+|------------------------|------------------------|------------------------|
 | Tasa de desempleo | Desocupados / PEA | \% de personas activas sin empleo |
 | Tasa de ocupación | Ocupados / PET | \% de población en edad de trabajar con empleo |
 | Tasa de actividad | PEA / PET | \% de población en edad de trabajar que participa en el mercado laboral |
