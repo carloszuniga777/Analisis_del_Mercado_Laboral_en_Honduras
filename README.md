@@ -4,9 +4,13 @@
 
 ## 1. 📘 Introducción
 
-Este proyecto presenta un estudio del mercado laboral en Honduras, enfocado en analizar su comportamiento general y su evolución a lo largo del tiempo. El análisis se centra en variables clave como la Población en Edad de Trabajar (PET) y la Población Económicamente Activa (PEA), permitiendo observar la dinámica del empleo, el desempleo y la participación laboral.
+El mercado laboral constituye uno de los principales termómetros del desarrollo económico y social de un país. En el caso de Honduras, su comportamiento ha estado marcado por transformaciones demográficas, choques económicos recurrentes y brechas estructurales persistentes que afectan de manera desigual a distintos grupos de la población.
 
-Adicionalmente, el estudio aborda el mercado laboral desde una perspectiva demográfica, incorporando análisis por género y por grupos de edad. Este enfoque permite identificar patrones, brechas y tendencias estructurales que caracterizan el funcionamiento del mercado laboral hondureño.
+Este proyecto desarrolla un análisis integral del mercado laboral hondureño a partir de datos oficiales, con el objetivo de comprender su evolución en el período 2012–2025 y evaluar la relación entre el crecimiento del potencial humano y la capacidad real del mercado para absorberlo. El estudio se apoya en dos conceptos centrales —la Población en Edad de Trabajar (PET) y la Población Económicamente Activa (PEA)— como ejes analíticos para examinar la dinámica del empleo, el desempleo y la participación laboral.
+
+El análisis incorpora una perspectiva demográfica desagregada por género y grupos etarios, lo que permite identificar patrones diferenciados, brechas persistentes y rupturas estructurales asociadas tanto a cambios metodológicos como a eventos económicos recientes, como la pandemia de COVID-19 y los desastres naturales ETA e IOTA. A lo largo del proyecto, los datos son transformados en indicadores comparables y visualizaciones analíticas que facilitan la interpretación de tendencias de largo plazo y la generación de insights accionables.
+
+En conjunto, este estudio busca ofrecer una base analítica sólida para la comprensión del mercado laboral hondureño, sirviendo como insumo para la toma de decisiones, el diseño de políticas públicas y el desarrollo de análisis más profundos sobre la calidad y sostenibilidad del empleo en el país.
 
 ------------------------------------------------------------------------
 
@@ -109,7 +113,7 @@ Para entender el mercado laboral en Honduras, es fundamental diferencias entre d
 ### 7.3. Métricas Claves:
 
 | Métrica | Fórmula | Interpretación |
-|------------------------|------------------------|------------------------|
+|----|----|----|
 | Tasa de desempleo | Desocupados / PEA | \% de personas activas sin empleo |
 | Tasa de ocupación | Ocupados / PET | \% de población en edad de trabajar con empleo |
 | Tasa de actividad | PEA / PET | \% de población en edad de trabajar que participa en el mercado laboral |
